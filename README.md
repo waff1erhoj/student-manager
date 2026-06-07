@@ -65,7 +65,7 @@ sudo mysql -e "CREATE USER IF NOT EXISTS 'student_app'@'localhost' IDENTIFIED BY
 ### 4. 启动
 
 ```bash
-mvn tomcat7:run
+mvn org.apache.tomcat.maven:tomcat7-maven-plugin:2.2:run
 ```
 
 浏览器打开 **http://localhost:8080/student-manager/students?action=list**
@@ -120,7 +120,7 @@ mysql -u root -p -e "CREATE USER IF NOT EXISTS 'student_app'@'localhost' IDENTIF
 ### 4. 启动
 
 ```bash
-mvn tomcat7:run
+mvn org.apache.tomcat.maven:tomcat7-maven-plugin:2.2:run
 ```
 
 浏览器打开 **http://localhost:8080/student-manager/students?action=list**

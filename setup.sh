@@ -20,4 +20,4 @@ mvn clean package -q
 
 echo "==> 启动服务..."
 echo "访问地址: http://localhost:8080/student-manager/students?action=list"
-mvn tomcat7:run
+mvn org.apache.tomcat.maven:tomcat7-maven-plugin:2.2:run
