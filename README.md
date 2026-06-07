@@ -38,34 +38,65 @@ src/main/
         └── js/jquery.min.js
 ```
 
-## 快速开始
+## 一键克隆运行（从零开始）
 
-### 1. 数据库初始化
+以下步骤适用于任何安装了 Ubuntu 的电脑，从零搭建到运行只需几条命令。
+
+### 环境准备
 
 ```bash
-mysql -u root -p < sql/init.sql
+# 安装 Java、Maven、MySQL、Git
+sudo apt-get update
+sudo apt-get install -y default-jdk maven mysql-server mysql-client git
+
+# 启动 MySQL
+sudo service mysql start
 ```
 
-创建 JDBC 用户并授权：
+### 克隆项目
 
-```sql
+```bash
+git clone https://github.com/waff1erhoj/student-manager.git
+cd student-manager
+```
+
+### 初始化数据库
+
+```bash
+# 创建数据库和表
+sudo mysql < sql/init.sql
+
+# 创建应用用户（JDBC 连接用）
+sudo mysql -e "
 CREATE USER IF NOT EXISTS 'student_app'@'localhost' IDENTIFIED BY 'student123';
 GRANT ALL PRIVILEGES ON student_manager.* TO 'student_app'@'localhost';
 FLUSH PRIVILEGES;
+"
 ```
 
-### 2. 配置数据库连接
+如果数据库密码不同，编辑 `src/main/resources/db.properties` 修改：
 
-编辑 `src/main/resources/db.properties`，修改你的数据库用户名和密码。
+```properties
+db.username=student_app
+db.password=student123
+```
 
-### 3. 编译运行
+### 启动运行
 
 ```bash
 mvn clean package
 mvn tomcat7:run
 ```
 
-访问: **http://localhost:8080/student-manager/students?action=list**
+浏览器打开: **http://localhost:8080/student-manager/students?action=list**
+
+### 一键脚本（可选）
+
+首次运行也可以直接执行：
+
+```bash
+chmod +x setup.sh && ./setup.sh
+```
 
 ## API 接口
 
