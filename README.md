@@ -1,6 +1,6 @@
 # Student Manager - 学生管理系统
 
-Java Web 学生信息管理系统，采用经典分层架构实现学生记录的增删改查。
+Java Web 学生信息管理系统，采用经典分层架构实现学生记录的增删改查。**跨平台，同时支持 Ubuntu 和 Windows。**
 
 ## 技术栈
 
@@ -38,64 +38,107 @@ src/main/
         └── js/jquery.min.js
 ```
 
-## 一键克隆运行（从零开始）
+## Ubuntu 快速开始
 
-以下步骤适用于任何安装了 Ubuntu 的电脑，从零搭建到运行只需几条命令。
-
-### 环境准备
+### 1. 安装环境
 
 ```bash
-# 安装 Java、Maven、MySQL、Git
 sudo apt-get update
-sudo apt-get install -y default-jdk maven mysql-server mysql-client git
-
-# 启动 MySQL
+sudo apt-get install -y default-jdk maven mysql-server git
 sudo service mysql start
 ```
 
-### 克隆项目
+### 2. 克隆项目
 
 ```bash
 git clone https://github.com/waff1erhoj/student-manager.git
 cd student-manager
 ```
 
-### 初始化数据库
+### 3. 初始化数据库
 
 ```bash
-# 创建数据库和表
 sudo mysql < sql/init.sql
-
-# 创建应用用户（JDBC 连接用）
-sudo mysql -e "
-CREATE USER IF NOT EXISTS 'student_app'@'localhost' IDENTIFIED BY 'student123';
-GRANT ALL PRIVILEGES ON student_manager.* TO 'student_app'@'localhost';
-FLUSH PRIVILEGES;
-"
+sudo mysql -e "CREATE USER IF NOT EXISTS 'student_app'@'localhost' IDENTIFIED BY 'student123'; GRANT ALL PRIVILEGES ON student_manager.* TO 'student_app'@'localhost'; FLUSH PRIVILEGES;"
 ```
 
-如果数据库密码不同，编辑 `src/main/resources/db.properties` 修改：
-
-```properties
-db.username=student_app
-db.password=student123
-```
-
-### 启动运行
+### 4. 启动
 
 ```bash
-mvn clean package
 mvn tomcat7:run
 ```
 
-浏览器打开: **http://localhost:8080/student-manager/students?action=list**
+浏览器打开 **http://localhost:8080/student-manager/students?action=list**
 
-### 一键脚本（可选）
+或一键执行：`chmod +x setup.sh && ./setup.sh`
 
-首次运行也可以直接执行：
+---
+
+## Windows 快速开始
+
+### 1. 安装环境
+
+下载并安装以下软件（均提供 `.msi` 或 `.exe` 安装包）：
+
+| 软件 | 下载地址 | 说明 |
+|------|---------|------|
+| JDK 17+ | https://adoptium.net | 安装时勾选"设置 JAVA_HOME" |
+| Maven | https://maven.apache.org/download.cgi | 解压后将 `bin/` 加入 PATH |
+| MySQL 8.0+ | https://dev.mysql.com/downloads/mysql | 选 MySQL Community Server，安装时记住 root 密码 |
+| Git | https://git-scm.com/download/win | 默认选项安装即可 |
+
+或使用 winget（Windows 10/11 自带）：
+
+```powershell
+winget install EclipseAdoptium.Temurin.17.JDK
+winget install Apache.Maven.3
+winget install Oracle.MySQL.8.0
+winget install Git.Git
+```
+
+> **注意：** MySQL 安装完成后，确保 MySQL 服务已启动（任务管理器 → 服务 → MySQL80 状态为"正在运行"）。
+
+### 2. 克隆项目
+
+```powershell
+git clone https://github.com/waff1erhoj/student-manager.git
+cd student-manager
+```
+
+### 3. 初始化数据库
+
+打开 **cmd** 或 **PowerShell**，切换到项目目录后：
 
 ```bash
-chmod +x setup.sh && ./setup.sh
+# 用 root 登录 MySQL，输入安装时设置的 root 密码
+mysql -u root -p < sql\init.sql
+
+# 创建应用用户（同样需要输入密码）
+mysql -u root -p -e "CREATE USER IF NOT EXISTS 'student_app'@'localhost' IDENTIFIED BY 'student123'; GRANT ALL PRIVILEGES ON student_manager.* TO 'student_app'@'localhost'; FLUSH PRIVILEGES;"
+```
+
+### 4. 启动
+
+```bash
+mvn tomcat7:run
+```
+
+浏览器打开 **http://localhost:8080/student-manager/students?action=list**
+
+> 首次运行 Maven 会自动下载依赖，需等待 1-2 分钟。
+
+也可以直接双击 `setup.bat` 脚本（需提前安装好 JDK、Maven、MySQL）。
+
+---
+
+## 数据库配置
+
+如果 MySQL 用户名或密码与默认不同，编辑 `src/main/resources/db.properties`：
+
+```properties
+db.url=jdbc:mysql://localhost:3306/student_manager?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+db.username=你的用户名
+db.password=你的密码
 ```
 
 ## API 接口
